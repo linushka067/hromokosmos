@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#090d24">
+    <meta name="description"
+        content="ХРОНОКОСМОС — путешествие в день твоего рождения: погода, звёзды, история, музыка и технологии.">
+    <title>ХРОНОКОСМОС — твой день во Вселенной</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+    <div class="starfield" id="starfield" aria-hidden="true"></div>
+    <header class="topbar wrap">
+        <a class="brand" href="#home" aria-label="Хронокосмос, на главную"><span class="brand-mark">✺</span>
+            ХРОНО<span>КОСМОС</span></a>
+        <nav aria-label="Навигация по сайту"><a href="#discover">Открытия</a><a href="#chronicle">Хроника</a><a
+                href="#compare">Сравнить</a></nav>
+    </header>
+
+    <main>
+        <section class="hero wrap" id="home">
+            <div class="hero-copy">
+                <span class="eyebrow"><span class="pulse"></span> МАШИНА ВРЕМЕНИ / ВЕРСИЯ 1.0</span>
+                <h1>В тот день <em>Вселенная</em> запомнила тебя.</h1>
+                <p class="hero-lead">Одна дата. Миллиарды звёзд. Тысячи историй. Узнай, каким был мир в день твоего
+                    рождения.</p>
+                <form class="search" id="searchForm">
+                    <label>Дата рождения<input type="date" id="birthDate" required min="1900-01-01"></label>
+                    <label>Время рождения<input type="time" id="birthTime" value="12:00"></label>
+                    <label class="city-field">Город рождения<input id="birthCity" autocomplete="address-level2"
+                            maxlength="90" value="Москва" required placeholder="Например, Москва"></label>
+                    <button type="submit" class="primary">Начать путешествие <span aria-hidden="true">↗</span></button>
+                </form>
+                <p class="micro">Данные загружаются из открытых источников. Если точных архивных записей нет, сайт
+                    сообщает об этом.</p>
+            </div>
+            <div class="hero-visual" aria-label="Декоративное изображение планеты с кольцами">
+                <div class="halo"></div>
+                <div class="orbit orbit-one"></div>
+                <div class="orbit orbit-two"></div>
+                <div class="planet">
+                    <div class="planet-shine"></div>
+                </div>
+                <div class="planet-ring"></div>
+                <div class="hero-spark s1">✦</div>
+                <div class="hero-spark s2">✧</div>
+                <div class="planet-caption">ТВОЯ ТОЧКА В ИСТОРИИ <strong>∞</strong></div>
+            </div>
+        </section>
+
+        <section class="wrap results is-hidden" id="results" aria-live="polite">
+            <div class="section-heading" id="discover"><span class="eyebrow">ТВОЯ ВСЕЛЕННАЯ</span>
+                <h2 id="dateHeading">История одного дня</h2>
+                <p id="resultsLead"></p>
+            </div>
+            <div class="facts" id="facts" aria-label="Интересные факты о дате"></div>
+            <div class="status-banner" id="statusBanner" role="status">Запрашиваем исторические данные…</div>
+
+            <div class="section-heading smaller"><span class="eyebrow">01 / ПРИРОДА И КОСМОС</span>
+                <h2>Каким был твой мир?</h2>
+            </div>
+            <div class="cards nature-grid">
+                <article class="card">
+                    <div class="card-kicker">☁ ПОГОДА</div>
+                    <h3>Небо над городом</h3>
+                    <div id="weatherContent" class="card-content">
+                        <p class="muted">Ожидает загрузки…</p>
+                    </div>
+                    <p class="source" id="weatherSource"></p>
+                </article>
+                <article class="card sky-card">
+                    <div class="card-kicker">✷ ЗВЁЗДНОЕ НЕБО</div>
+                    <h3>Звёзды в момент рождения</h3><canvas id="skyCanvas" width="440" height="360"
+                        aria-label="Карта звёздного неба над выбранным городом"></canvas>
+                    <p class="micro" id="skyNote">Расчёт положения ярких звёзд над горизонтом по времени и координатам
+                        города.</p>
+                </article>
+                <article class="card">
+                    <div class="card-kicker">☾ ФАЗА ЛУНЫ</div>
+                    <h3>Луна твоего дня</h3>
+                    <div class="moon-panel">
+                        <div id="moonIcon" class="moon-icon">◐</div>
+                        <div><strong id="moonName">—</strong>
+                            <p class="muted" id="moonInfo">—</p>
+                        </div>
+                    </div>
+                    <p class="micro">Астрономический расчёт приближённый; это не астрологический прогноз.</p>
+                </article>
+            </div>
+
+            <article class="card solar" id="solarSection">
+                <div class="solar-head">
+                    <div>
+                        <div class="card-kicker">02 / ПЛАНЕТЫ</div>
+                        <h3>Солнечная система в твой день</h3>
+                        <p class="muted">Перетащи схему, нажми на планету или измени масштаб.</p>
+                    </div>
+                    <div class="solar-controls"><button class="secondary small" id="motionToggle" type="button"
+                            aria-pressed="true">⏸ Остановить движение</button><label class="range-label">Масштаб <input
+                                type="range" min="70" max="150" value="100" id="solarZoom"></label></div>
+                </div><canvas id="solarCanvas" width="1000" height="470"
+                    aria-label="Интерактивная схема Солнечной системы"></canvas>
+                <p id="planetDescription" class="planet-description">Выбери планету на карте. Положения рассчитаны по
+                    упрощённым круговым орбитам и показывают эпоху приблизительно.</p>
+            </article>
+
+            <div class="section-heading smaller" id="chronicle"><span class="eyebrow">03 / ИСТОРИЯ</span>
+                <h2>О чём говорил мир?</h2>
+                <p>Это исторические события из энциклопедии, а не копии выпусков новостей за конкретную дату.</p>
+            </div>
+            <div class="cards two-col">
+                <article class="card">
+                    <div class="card-kicker">🇷🇺 РОССИЯ</div>
+                    <h3>События, связанные с Россией</h3>
+                    <div id="russiaContent" class="card-content">
+                        <p class="muted">Ожидает загрузки…</p>
+                    </div>
+                    <p class="source" id="russiaSource"></p>
+                </article>
+                <article class="card">
+                    <div class="card-kicker">🌍 В МИРЕ</div>
+                    <h3>Главные исторические события</h3>
+                    <div id="worldContent" class="card-content">
+                        <p class="muted">Ожидает загрузки…</p>
+                    </div>
+                    <p class="source" id="worldSource"></p>
+                </article>
+            </div>
+            <div class="cards three-col">
+                <article class="card">
+                    <div class="card-kicker">★ ИЗВЕСТНЫЕ ЛЮДИ</div>
+                    <h3>Родились в этот день</h3>
+                    <div id="peopleContent" class="card-content">
+                        <p class="muted">Ожидает загрузки…</p>
+                    </div>
+                    <p class="source" id="peopleSource"></p>
+                </article>
+                <article class="card">
+                    <div class="card-kicker">♫ МУЗЫКА</div>
+                    <h3>Саундтрек эпохи</h3>
+                    <div id="musicContent" class="card-content">
+                        <p class="muted">Ожидает загрузки…</p>
+                    </div>
+                    <p class="source" id="musicSource"></p>
+                </article>
+                <article class="card">
+                    <div class="card-kicker">▣ КИНО</div>
+                    <h3>Кино года рождения</h3>
+                    <div id="cinemaContent" class="card-content">
+                        <p class="muted">Ожидает загрузки…</p>
+                    </div>
+                    <p class="source" id="cinemaSource"></p>
+                </article>
+            </div>
+
+            <div class="section-heading smaller"><span class="eyebrow">04 / ОТКРЫТИЯ</span>
+                <h2>Как менялся мир?</h2>
+            </div>
+            <div class="cards two-col">
+                <article class="card">
+                    <div class="card-kicker">⌘ ТЕХНОЛОГИИ</div>
+                    <h3>Изобретения твоей эпохи</h3>
+                    <div id="techContent" class="card-content"></div>
+                </article>
+                <article class="card">
+                    <div class="card-kicker">⌛ ВРЕМЕННАЯ ШКАЛА</div>
+                    <h3>С рождения до сегодня</h3>
+                    <div id="timelineContent" class="card-content"></div>
+                </article>
+            </div>
+
+            <div class="section-heading smaller"><span class="eyebrow">05 / ЛИЧНАЯ ИСТОРИЯ</span>
+                <h2>Сохрани этот момент</h2>
+            </div>
+            <div class="cards two-col">
+                <article class="card">
+                    <div class="card-kicker">📰 ГАЗЕТА</div>
+                    <h3>Специальный выпуск: мой день</h3>
+                    <div id="newspaperContent" class="newspaper"></div><button type="button" class="secondary"
+                        id="printNews">Распечатать газету / сохранить PDF ↗</button>
+                </article>
+                <article class="card">
+                    <div class="card-kicker">✦ ПАСПОРТ ВРЕМЕНИ</div>
+                    <h3>Открытка из прошлого</h3>
+                    <p class="muted">Памятная карточка с датой, космосом и главными фактами. Можно сохранить в PNG или
+                        распечатать в PDF.</p>
+                    <div class="passport-art"><span>ХРОНОКОСМОС</span><strong id="passportDate">—</strong><small>Мир
+                            стал немного интереснее.</small></div>
+                    <div class="button-row"><button type="button" class="secondary" id="savePng">Сохранить PNG
+                            ↘</button><button type="button" class="secondary" id="savePdf">Сохранить PDF ↗</button>
+                    </div>
+                </article>
+            </div>
+
+            <article class="card compare" id="compare">
+                <div class="card-kicker">06 / ДВА ВРЕМЕНИ</div>
+                <h3>Два человека. Две эпохи.</h3>
+                <p class="muted">Сравни свой день рождения с другой датой: сколько дней между ними, фазы Луны и дни
+                    недели.</p>
+                <form id="compareForm" class="compare-form"><label>Вторая дата<input type="date" id="compareDate"
+                            required min="1900-01-01"></label><button type="submit" class="primary">Сравнить даты
+                        ↗</button></form>
+                <div id="compareContent" class="compare-output"></div>
+            </article>
+        </section>
+        <section class="wrap intro-bottom"><span class="eyebrow">СДЕЛАНО С ПОМОЩЬЮ КОДА</span>
+            <p>История — это не только учебник. Иногда она начинается с твоей даты рождения.</p>
+        </section>
+    </main>
+    <footer class="footer wrap"><span>✺ ХРОНОКОСМОС</span>
+        <p>Учебный проект на HTML, CSS и JavaScript. Данные из открытых источников; возможны пробелы в архивах.</p><a
+            href="#home">Наверх ↑</a>
+    </footer>
+    <section id="printSheet" aria-label="Версия для печати"></section>
+</body>
+
+</html>
